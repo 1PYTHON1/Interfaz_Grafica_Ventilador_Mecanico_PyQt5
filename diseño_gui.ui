@@ -73,10 +73,10 @@
    <widget class="QPushButton" name="pushButton_pc">
     <property name="geometry">
      <rect>
-      <x>970</x>
-      <y>90</y>
-      <width>161</width>
-      <height>101</height>
+      <x>1070</x>
+      <y>390</y>
+      <width>101</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="font">
@@ -112,10 +112,10 @@
    <widget class="QPushButton" name="pushButton__vc">
     <property name="geometry">
      <rect>
-      <x>970</x>
-      <y>310</y>
-      <width>161</width>
-      <height>101</height>
+      <x>920</x>
+      <y>390</y>
+      <width>101</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="font">
@@ -435,6 +435,129 @@
      <string>PLOTER ON</string>
     </property>
    </widget>
+   <widget class="QLCDNumber" name="lcdNumber_peep">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>60</y>
+      <width>121</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">#lcdNumber_peep{
+
+border: 2px solid rgb(72, 72, 72);
+
+
+}
+#lcdNumber_peep:hover{
+
+border: 2px solid  rgb(190, 190, 190);
+
+}
+</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_incrementar_peep">
+    <property name="geometry">
+     <rect>
+      <x>1040</x>
+      <y>60</y>
+      <width>53</width>
+      <height>53</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">#pushButton_incrementar_peep
+{
+background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (1).png);
+}
+#pushButton_incrementar_peep:hover
+{
+background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (2).png);
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_decrementar_peep">
+    <property name="geometry">
+     <rect>
+      <x>1110</x>
+      <y>60</y>
+      <width>53</width>
+      <height>53</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">#pushButton_decrementar_peep{
+background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill.png);
+}
+#pushButton_decrementar_peep:hover{
+background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (3).png);
+}
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_confirmar_peep">
+    <property name="geometry">
+     <rect>
+      <x>1040</x>
+      <y>130</y>
+      <width>122</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Montserrat</family>
+      <pointsize>9</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">#pushButton_confirmar_peep{
+
+}
+#pushButton_confirmar_peep:hover{
+color: rgb(170, 255, 255);
+}</string>
+    </property>
+    <property name="text">
+     <string>CONFIRMAR PEEP</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>115</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Montserrat</family>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>PEEP    cmH2O</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -447,6 +570,8 @@
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="diseño.qrc"/>
+ </resources>
  <connections/>
 </ui>

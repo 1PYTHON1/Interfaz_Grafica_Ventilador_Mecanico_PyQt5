@@ -137,8 +137,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.dato_y = np.array([])
         self.dato_int = 0
         self.posicion_com  = 0  # Posicion Index del combobox com
-        self.com_seleccionado = 0  # Puerto Com seleccionado str
-
+        self.com_seleccionado = 0  # Puerto Com seleccionado start
 
     def desconectar_puerto(self):
         if self.pase_on == 1:

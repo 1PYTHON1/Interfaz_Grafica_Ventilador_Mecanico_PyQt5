@@ -41,7 +41,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_signal_2.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_signal_2.setObjectName("verticalLayout_signal_2")
         self.pushButton_pc = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_pc.setGeometry(QtCore.QRect(970, 90, 161, 101))
+        self.pushButton_pc.setGeometry(QtCore.QRect(1070, 390, 101, 41))
         font = QtGui.QFont()
         font.setPointSize(18)
         self.pushButton_pc.setFont(font)
@@ -56,7 +56,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_signal_3.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_signal_3.setObjectName("verticalLayout_signal_3")
         self.pushButton__vc = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton__vc.setGeometry(QtCore.QRect(970, 310, 161, 101))
+        self.pushButton__vc.setGeometry(QtCore.QRect(920, 390, 101, 41))
         font = QtGui.QFont()
         font.setPointSize(18)
         self.pushButton__vc.setFont(font)
@@ -164,6 +164,68 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         self.pushButton_sincronizar_datos.setFont(font)
         self.pushButton_sincronizar_datos.setObjectName("pushButton_sincronizar_datos")
+        self.lcdNumber_peep = QtWidgets.QLCDNumber(self.centralwidget)
+        self.lcdNumber_peep.setGeometry(QtCore.QRect(910, 60, 121, 51))
+        self.lcdNumber_peep.setStyleSheet("#lcdNumber_peep{\n"
+"\n"
+"border: 2px solid rgb(72, 72, 72);\n"
+"\n"
+"\n"
+"}\n"
+"#lcdNumber_peep:hover{\n"
+"\n"
+"border: 2px solid  rgb(190, 190, 190);\n"
+"\n"
+"}\n"
+"")
+        self.lcdNumber_peep.setFrameShape(QtWidgets.QFrame.Box)
+        self.lcdNumber_peep.setObjectName("lcdNumber_peep")
+        self.pushButton_incrementar_peep = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_incrementar_peep.setGeometry(QtCore.QRect(1040, 60, 53, 53))
+        self.pushButton_incrementar_peep.setStyleSheet("#pushButton_incrementar_peep\n"
+"{\n"
+"background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (1).png);\n"
+"}\n"
+"#pushButton_incrementar_peep:hover\n"
+"{\n"
+"background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (2).png);\n"
+"}")
+        self.pushButton_incrementar_peep.setText("")
+        self.pushButton_incrementar_peep.setObjectName("pushButton_incrementar_peep")
+        self.pushButton_decrementar_peep = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_decrementar_peep.setGeometry(QtCore.QRect(1110, 60, 53, 53))
+        self.pushButton_decrementar_peep.setStyleSheet("#pushButton_decrementar_peep{\n"
+"background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill.png);\n"
+"}\n"
+"#pushButton_decrementar_peep:hover{\n"
+"background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (3).png);\n"
+"}\n"
+"")
+        self.pushButton_decrementar_peep.setText("")
+        self.pushButton_decrementar_peep.setObjectName("pushButton_decrementar_peep")
+        self.pushButton_confirmar_peep = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_confirmar_peep.setGeometry(QtCore.QRect(1040, 130, 122, 31))
+        font = QtGui.QFont()
+        font.setFamily("Montserrat")
+        font.setPointSize(9)
+        font.setBold(False)
+        font.setWeight(50)
+        self.pushButton_confirmar_peep.setFont(font)
+        self.pushButton_confirmar_peep.setStyleSheet("#pushButton_confirmar_peep{\n"
+"\n"
+"}\n"
+"#pushButton_confirmar_peep:hover{\n"
+"color: rgb(170, 255, 255);\n"
+"}")
+        self.pushButton_confirmar_peep.setObjectName("pushButton_confirmar_peep")
+        self.label_8 = QtWidgets.QLabel(self.centralwidget)
+        self.label_8.setGeometry(QtCore.QRect(910, 115, 121, 31))
+        font = QtGui.QFont()
+        font.setFamily("Montserrat")
+        font.setPointSize(11)
+        self.label_8.setFont(font)
+        self.label_8.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_8.setObjectName("label_8")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1200, 16))
@@ -195,6 +257,9 @@ class Ui_MainWindow(object):
         self.comboBox.setItemText(5, _translate("MainWindow", "COM5"))
         self.pushButton_desconectar_serial.setText(_translate("MainWindow", "DESCONECTAR"))
         self.pushButton_sincronizar_datos.setText(_translate("MainWindow", "PLOTER ON"))
+        self.pushButton_confirmar_peep.setText(_translate("MainWindow", "CONFIRMAR PEEP"))
+        self.label_8.setText(_translate("MainWindow", "PEEP    cmH2O"))
+import diseño_rc
 
 
 if __name__ == "__main__":
