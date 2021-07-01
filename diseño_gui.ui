@@ -334,13 +334,15 @@
      <rect>
       <x>20</x>
       <y>710</y>
-      <width>121</width>
+      <width>131</width>
       <height>41</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>12</pointsize>
+      <pointsize>11</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
@@ -350,7 +352,7 @@
    <widget class="QComboBox" name="comboBox">
     <property name="geometry">
      <rect>
-      <x>160</x>
+      <x>170</x>
       <y>710</y>
       <width>141</width>
       <height>41</height>
@@ -391,6 +393,47 @@
       <string>COM5</string>
      </property>
     </item>
+   </widget>
+   <widget class="QPushButton" name="pushButton_desconectar_serial">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>710</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>DESCONECTAR</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_sincronizar_datos">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>PLOTER ON</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

@@ -22,15 +22,21 @@ def abrir_puerto(self,com_puerto):
 
 def recibir_datos(self):
     try:
-        dato = ser.readline()  # Lee el la cadena de byte del puerto serial
-        dato = str(dato.decode()).replace('\r','')  # decodifica el byte a str y quita el retorno "\r"
-        dato = dato.replace('\n','')  # Quita del str el salto de linea "\n"
-        dato_entero = 0
-        if len(dato) > 0 :  # Verifica que cadena de texto (str) no este vacio
-            dato_entero = int(dato)  # Convierte el str a un int (entero)
-        return dato_entero  # retorna el dato 
+        lista = []
+        for i in range(3):
+            dato = ser.readline()  # Lee el la cadena de byte del puerto serial
+            dato = str(dato.decode()).replace('\r','')  # decodifica el byte a str y quita el retorno "\r"
+            dato = dato.replace('\n','')  # Quita del str el salto de linea "\n"
+            if len(dato) > 0 :  # Verifica que cadena de texto (str) no este vacio
+                lista.append(int(dato))  # Convierte el str a un int (entero)
+            else:
+                lista.append(0)
+        return lista  # retorna el dato 
     except:
-        return None
+        dato = [0,0,0]
+        return dato
+def deconectar_puerto(self):
+    ser.close()
 
 class Canvas_1(FigureCanvas):
     def __init__(self, parent):
@@ -50,8 +56,6 @@ class Canvas_1(FigureCanvas):
                title='About as simple as it gets, folks')
         self.ax.grid()
 
-
-
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, *args, **kwargs):
         QtWidgets.QMainWindow.__init__(self, *args, **kwargs)
@@ -64,6 +68,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lcdNumber_frecuencia.display(self.frecuencia_lcd)
         self.setWindowTitle("INTERFAZ GRAFICA VENTILADOR MECANICO")
         self.mensaje = QtWidgets.QMessageBox(self)
+        self.pushButton_desconectar_serial.clicked.connect(self.desconectar_puerto)
         self.pushButton_conectar_serial.clicked.connect(self.conectar_puerto)
         self.pushButton_frecuencia_up.clicked.connect(self.incrementar_frecuencia)
         self.pushButton_frecuencia_down.clicked.connect(self.decrementar_frecuencia)
@@ -78,7 +83,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         #Ploteamos la figura dinamica
         self._dynamic_ax_1 = self.dynamic_canvas_1.figure.subplots()
         self._dynamic_ax_1.grid()
-        t = np.linspace(0, 400, 100)
+        t = np.linspace(0, 800, 100)
         # Set up a Line2D.
         #self._line, = self._dynamic_ax.plot(t, np.in(t + time.time()))
         self._line, = self._dynamic_ax_1.plot(t, np.linspace(0,300,100),"g")
@@ -97,10 +102,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         #Ploteamos la figura dinamica
         self._dynamic_ax_2 = self.dynamic_canvas_2.figure.subplots()
         self._dynamic_ax_2.grid()
-        t = np.linspace(0, 400, 100)
+        t = np.linspace(0, 800, 100)
         # Set up a Line2D.
         #self._line, = self._dynamic_ax.plot(t, np.in(t + time.time()))
-        self._line_2, = self._dynamic_ax_2.plot(t, np.linspace(0,300,100),"b")
+        self._line_2, = self._dynamic_ax_2.plot(t, np.linspace(-300,300,100),"b")
         #self._timer_2 = self.dynamic_canvas_2.new_timer(50)
         #self._timer_2.add_callback(self._update_canvas_2)
         #self._timer_2.start()
@@ -116,7 +121,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         #Ploteamos la figura dinamica
         self._dynamic_ax_3 = self.dynamic_canvas_3.figure.subplots()
         self._dynamic_ax_3.grid()
-        t = np.linspace(0, 400, 100)
+        t = np.linspace(0, 800, 100)
         # Set up a Line2D.
         #self._line, = self._dynamic_ax.plot(t, np.in(t + time.time()))
         self._line_3, = self._dynamic_ax_3.plot(t, np.linspace(0,300,100),"r")
@@ -125,17 +130,30 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         #self._timer_3.start()
         #FIGURA DINAMICA 3
 
-
-        
-
-
         self.contador  = 0
+        self.dato_y_flujo = np.array([]) 
+        self.dato_y_volumen = np.array([])
         self.dato_x = np.array([])
         self.dato_y = np.array([])
         self.dato_int = 0
         self.posicion_com  = 0  # Posicion Index del combobox com
         self.com_seleccionado = 0  # Puerto Com seleccionado str
 
+
+    def desconectar_puerto(self):
+        if self.pase_on == 1:
+            deconectar_puerto(self)
+            self.pase_on = 0
+            self.contador  = 0
+            self.dato_y_volumen = np.array([])
+            self.dato_y_flujo = np.array([]) 
+            self.dato_x = np.array([])
+            self.dato_y = np.array([])
+
+            self.mensaje.setWindowTitle("Mensaje")
+            self.mensaje.setText("Se Desconecto del Puerto COM")
+            self.mensaje.move(self.pos().x()+500, self.pos().y()+400)
+            self.mensaje.exec_()
 
     def conectar_puerto(self):
 
@@ -182,22 +200,28 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         if self.pase_on == 1:
             self.contador += 1
+
             self.dato_x = np.append(self.dato_x,self.contador) 
-            self.dato_int = recibir_datos(self)  # Retorna Falso si se pierde la conexion 
-            self.dato_y = np.append(self.dato_y,self.dato_int)
+            lista_datos = recibir_datos(self)  # Retorna una lista con dos datos flujo y presion
+
+            self.dato_y = np.append(self.dato_y,lista_datos[0])
+            self.dato_y_flujo = np.append(self.dato_y_flujo,lista_datos[1])
+            self.dato_y_volumen = np.append(self.dato_y_volumen, lista_datos[2])
             # PLOTER DE LA SEÑAL
-            self._line_3.set_data(self.dato_x,self.dato_y)
+            self._line_3.set_data(self.dato_x,self.dato_y_volumen)
             self._line_3.figure.canvas.draw()
-            self._line_2.set_data(self.dato_x,self.dato_y)
+            self._line_2.set_data(self.dato_x,self.dato_y_flujo)
             self._line_2.figure.canvas.draw()
             self._line.set_data(self.dato_x,self.dato_y)
             self._line.figure.canvas.draw()
             # Fin del PLoter de la señal
-            self.lcdNumber_presion.display(self.dato_int)
-            if self.contador == 400:
+            self.lcdNumber_presion.display(lista_datos[0])
+            if self.contador == 800:
                 self.contador = 0 
                 self.dato_x = np.array([])
                 self.dato_y = np.array([])
+                self.dato_y_flujo = np.array([])
+                self.dato_y_volumen = np.array([])
 
 
 
