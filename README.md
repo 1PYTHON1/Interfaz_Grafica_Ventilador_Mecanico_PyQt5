@@ -3,6 +3,7 @@
 - MatplotLib
 - PyQt5
 - Numpy
+- Serial
 
 Para mostrar los datos mediante señales con matplotlib y modificar dichos valores  📊📈📉
 
