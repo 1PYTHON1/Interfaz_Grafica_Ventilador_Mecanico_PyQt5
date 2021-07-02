@@ -1,5 +1,5 @@
 # Interfaz_Gráfica_Ventilador_Mecánico_PyQt5 💻🐍📈📉
-# Dependencias 
+# Dependencias 📄
 - MatplotLib
 - PyQt5
 - Numpy
