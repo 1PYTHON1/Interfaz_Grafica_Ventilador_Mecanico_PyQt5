@@ -31,9 +31,9 @@
    <widget class="QWidget" name="signal_1" native="true">
     <property name="geometry">
      <rect>
-      <x>300</x>
+      <x>269</x>
       <y>60</y>
-      <width>600</width>
+      <width>631</width>
       <height>200</height>
      </rect>
     </property>
@@ -42,7 +42,7 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>591</width>
+       <width>631</width>
        <height>191</height>
       </rect>
      </property>
@@ -52,9 +52,9 @@
    <widget class="QWidget" name="signal_2" native="true">
     <property name="geometry">
      <rect>
-      <x>300</x>
+      <x>269</x>
       <y>260</y>
-      <width>600</width>
+      <width>631</width>
       <height>200</height>
      </rect>
     </property>
@@ -63,7 +63,7 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>591</width>
+       <width>631</width>
        <height>191</height>
       </rect>
      </property>
@@ -91,9 +91,9 @@
    <widget class="QWidget" name="signal_3" native="true">
     <property name="geometry">
      <rect>
-      <x>300</x>
+      <x>269</x>
       <y>460</y>
-      <width>600</width>
+      <width>631</width>
       <height>200</height>
      </rect>
     </property>
@@ -102,7 +102,7 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>591</width>
+       <width>631</width>
        <height>191</height>
       </rect>
      </property>
@@ -166,9 +166,9 @@
    <widget class="QLCDNumber" name="lcdNumber_presion">
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>69</x>
       <y>60</y>
-      <width>180</width>
+      <width>181</width>
       <height>100</height>
      </rect>
     </property>
@@ -176,7 +176,7 @@
    <widget class="QLCDNumber" name="lcdNumber_flujo">
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>70</x>
       <y>260</y>
       <width>180</width>
       <height>100</height>
@@ -186,7 +186,7 @@
    <widget class="QLCDNumber" name="lcdNumber_volumen">
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>70</x>
       <y>460</y>
       <width>180</width>
       <height>100</height>
@@ -196,7 +196,7 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>240</x>
+      <x>200</x>
       <y>160</y>
       <width>51</width>
       <height>31</height>
@@ -217,7 +217,7 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>230</x>
+      <x>190</x>
       <y>190</y>
       <width>61</width>
       <height>31</height>
@@ -238,7 +238,7 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>230</x>
+      <x>190</x>
       <y>390</y>
       <width>61</width>
       <height>31</height>
@@ -259,7 +259,7 @@
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>200</x>
+      <x>160</x>
       <y>360</y>
       <width>91</width>
       <height>31</height>
@@ -280,7 +280,7 @@
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>230</x>
+      <x>190</x>
       <y>560</y>
       <width>61</width>
       <height>31</height>
@@ -301,7 +301,7 @@
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>230</x>
+      <x>190</x>
       <y>590</y>
       <width>61</width>
       <height>31</height>
@@ -417,8 +417,8 @@
    <widget class="QPushButton" name="pushButton_sincronizar_datos">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>10</y>
+      <x>10</x>
+      <y>0</y>
       <width>131</width>
       <height>41</height>
      </rect>
@@ -558,6 +558,114 @@ color: rgb(170, 255, 255);
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
    </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>220</y>
+      <width>51</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>PEEP</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_peep_actual">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>220</y>
+      <width>101</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_encender_vm">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>710</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">#pushButton_encender_vm{
+background: #0FC62C;
+border: 2px solid #000000;}
+
+#pushButton_encender_vm:hover
+{
+background-color: rgb(78, 234, 0);
+color: rgb(255, 255, 255);
+border: 2px solid rgb(255, 255, 255);
+
+}</string>
+    </property>
+    <property name="text">
+     <string>ENCENDIDO</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_apagar_vm">
+    <property name="geometry">
+     <rect>
+      <x>680</x>
+      <y>710</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">#pushButton_apagar_vm{
+background: #F13535;
+border: 2px solid #000000;}
+
+#pushButton_apagar_vm:hover
+{
+background-color: rgb(255, 0, 0);
+color: rgb(255, 255, 255);
+border: 2px solid rgb(255, 255, 255);
+
+}</string>
+    </property>
+    <property name="text">
+     <string>APAGADO</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -565,7 +673,7 @@ color: rgb(170, 255, 255);
      <x>0</x>
      <y>0</y>
      <width>1200</width>
-     <height>16</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
