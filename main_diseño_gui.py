@@ -5,17 +5,18 @@
 from diseño import *  # importamos el modulo de nuestro diseño en PyQt5
 import serial  # Importamos serial para la comunicacion serial con arduino
 import matplotlib.pyplot as plt  # Importamos matplotlib para mostrar las graficas
-import numpy as np  # Importamos numpy para manejar matrices de nuestros datos obtenidas de arduino
-import qdarkstyle  # Para darle un estilo oscuro a nuestra interfaz graficas diseñada en PyQt5
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas,NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
+import numpy as np  # Importamos numpy para manejar matrices de nuestros datos obtenidas de arduino
+import qdarkstyle  # Para darle un estilo oscuro a nuestra interfaz graficas diseñada en PyQt5
+import time
 
 # fin de la importacion de dependencias
 
 def abrir_puerto(self,com_puerto):
     global ser  # variable global ser 
     try:
-        ser = serial.Serial(com_puerto,19200)
+        ser = serial.Serial(com_puerto,9600)
         return True
     except:
         return False
@@ -31,43 +32,25 @@ def recibir_datos(self):
                 lista.append(int(dato))  # Convierte el str a un int (entero)
             else:
                 lista.append(0)
-        return lista  # retorna el dato 
+        return lista  # retorna los datos en una lista 
     except:
-        dato = [0,0,0]
-        return dato
+        dato = [0,0,0]  # En caso que haya falsa lectura se enviara 0 para no generar errore
+        return dato  # Retorn a la lista de datos [0,0,0]
 
 def enviar_datos(self,dato):
     if dato == "activar_sistema":
-        ser.write(b'3\r\n')
+        ser.write(b'2\r\n')
     if dato == "desactivar_sistema":
-        ser.write(b'4\r\n')
+        ser.write(b'3\r\n')
     if dato == "enviar_frecuencia":
-        ser.write(b'\r\n')
+        ser.write(b'0\r\n')  # POR DEFINIR 
     if dato == "incrementar_frecuencia":
         ser.write(b'1')
     if dato == "decrementar_frecuencia":
         ser.write(b'0')
-
 def deconectar_puerto(self):
     ser.close()
 
-class Canvas_1(FigureCanvas):
-    def __init__(self, parent):
-
-        fig, self.ax = plt.subplots(figsize=(5, 4), dpi=90)
-        super().__init__(fig)
-        self.setParent(parent)
-
-        """ 
-        Matplotlib Script
-        """
-        t = np.arange(0.0, 2.0, 0.01)
-        s = 1 + np.sin(2 * np.pi * t)
-        
-        self.ax.plot(t, s,"b")
-        self.ax.set(xlabel='time (s)', ylabel='voltage (mV)',
-               title='About as simple as it gets, folks')
-        self.ax.grid()
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, *args, **kwargs):
@@ -89,7 +72,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pushButton_incrementar_peep.clicked.connect(self.incrementar_peep_funcion)
         self.pushButton_decrementar_peep.clicked.connect(self.decrementar_peep_funcion)
         self.pushButton_confirmar_peep.clicked.connect(self.confirmar_peep_funcion)
+        self.pushButton_encender_vm.clicked.connect(self.activar_sistema)
+        self.pushButton_apagar_vm.clicked.connect(self.desactivar_sistema)
         
+
         #FIGURA DINAMICA_1
         self.dynamic_canvas_1 = FigureCanvas(Figure(figsize=(5, 3),dpi=100))
         self.addToolBar(QtCore.Qt.BottomToolBarArea,
@@ -103,7 +89,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Set up a Line2D.
         #self._line, = self._dynamic_ax.plot(t, np.in(t + time.time()))     
         self._line, = self._dynamic_ax_1.plot(t, np.linspace(0,40,800),"g")
-        self._timer = self.dynamic_canvas_1.new_timer(100)  # hace una actualizacion cada 1 milisegundo
+        self._timer = self.dynamic_canvas_1.new_timer(1)  # hace una actualizacion cada 1 milisegundo
         self._timer.add_callback(self._update_canvas)
         #self._timer.start()
         #FIGURA DINAMICA 1
@@ -154,6 +140,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.com_seleccionado = 0  # Puerto COM seleccionado start
         self.dato_lcd_peep = 5  # Comienza con el valor de PEEP en 5
         self.dato_lcd_peep_confirmado = 5  # Variable de confirmacion del PEEP comienza en 5
+        self.sistema_activado = 0  # Toma dos valores verdadero o falso
         self.label_peep_actual.setText(str(self.dato_lcd_peep_confirmado))  # Setea la etiqueta con el valor de PEEP 
         self.lcdNumber_peep.display(self.dato_lcd_peep)  # Mostrara el VALOR de PEEP inicial que es 5
 
@@ -161,54 +148,63 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # factor de escala de 255 - 0 a valores de reales de medicion 
 
 
+    def activar_sistema(self):
+        if self.pase_on==1:
+            enviar_datos(self,"activar_sistema")
+            self.mostrar_mensaje("Sistema Activado")
+            self.sistema_activado = 1
+            self._timer.start()  ### Comienza a recibir las señales y activa al timer
+        if self.pase_on==0:
+            self.mostrar_mensaje("Conectar el Puerto Serie")
 
-    def desconectar_puerto(self):
+
+    def desactivar_sistema(self):
         if self.pase_on == 1:
             self._timer.stop()  # Desactiva el timer y da en pausa la peticion de datos
+            enviar_datos(self,"desactivar_sistema")
             deconectar_puerto(self)
             self.pase_on = 0
             self.contador  = 0
+            self.sistema_activado = 0
             self.dato_y_volumen = np.array([])
             self.dato_y_flujo = np.array([]) 
             self.dato_x = np.array([])
             self.dato_y_presion = np.array([])
+            self.mostrar_mensaje("Se Apaga el Sistema")
 
-            self.mensaje.setWindowTitle("Mensaje")
-            self.mensaje.setText("Se Desconecto del Puerto COM")
-            self.mensaje.move(self.pos().x()+500, self.pos().y()+400)
-            self.mensaje.exec_()
+    def desconectar_puerto(self):
+        if self.pase_on == 1:
+            self._timer.stop()  # Desactiva el timer y da en pausa la peticion de datos
+            enviar_datos(self,"desactivar_sistema")
+            deconectar_puerto(self)
+            self.pase_on = 0
+            self.contador  = 0
+            self.sistema_activado = 0
+            self.dato_y_volumen = np.array([])
+            self.dato_y_flujo = np.array([]) 
+            self.dato_x = np.array([])
+            self.dato_y_presion = np.array([])
+            self.mostrar_mensaje("Se Desconecto del Puerto COM")
 
     def conectar_puerto(self):
 
         if self.pase_on==1:
             self.comboBox.setCurrentIndex(self.posicion_com)
-            self.mensaje.setWindowTitle("MENSAJE")
-            self.mensaje.setText(f"Ya esta conectado el puerto serie {self.com_seleccionado}")
-            self.mensaje.move(self.pos().x()+500, self.pos().y()+400)
-            self.mensaje.exec_()
+            self.mostrar_mensaje(f"Ya esta conectado el puerto serie {self.com_seleccionado}")
 
         if self.pase_on==0:
-            self._timer.start()  ### Comienza a recibir las señales y activa al timer
             self.com_seleccionado = self.comboBox.currentText()
             self.posicion_com = self.comboBox.currentIndex()
 
 
             if abrir_puerto(self,self.com_seleccionado):  # Conecta a puerto serie y retorna True or False
                 self.pase_on = 1
-                self.mensaje.setWindowTitle("Mensaje")
-                self.mensaje.setText(f"Se a Conectado al puerto Serial {self.com_seleccionado}")
-                self.mensaje.move(self.pos().x()+500, self.pos().y()+400)
-                self.mensaje.exec_()
+                self.mostrar_mensaje(f"Se a Conectado al puerto Serial {self.com_seleccionado}")
+
             elif self.posicion_com == 0:
-                self.mensaje.setWindowTitle("Mensaje")
-                self.mensaje.setText("Escoger un Puerto COM")
-                self.mensaje.move(self.pos().x()+500, self.pos().y()+400)
-                self.mensaje.exec_()
+                self.mostrar_mensaje("Escoger un Puerto COM")
             else:
-                self.mensaje.setWindowTitle("Mensaje")
-                self.mensaje.setText("Error al Conectar el Puerto Seleccionado")
-                self.mensaje.move(self.pos().x()+500, self.pos().y()+400)
-                self.mensaje.exec_()
+                self.mostrar_mensaje("Error al Conectar el Puerto Seleccionado")
 
     def incrementar_frecuencia(self):
         if self.pase_on == 1:
@@ -240,7 +236,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def _update_canvas(self):
 
-        if self.pase_on == 1:
+        if self.sistema_activado == 1:
 
             self.contador += 1#*(1/(self.frecuencia_lcd/2))
             self.dato_x = np.append(self.dato_x,self.contador) 
@@ -266,6 +262,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.dato_y_volumen = np.array([])
 
 
+    def mostrar_mensaje(self,mensaje):  # Funcion para Mostrar mensajes de alerta 
+        self.mensaje.setWindowTitle("Mensaje")  # Titulo del Mensaje
+        self.mensaje.setText(mensaje)  # Se muestra el texto de mensaje recibido por la funcion
+        self.mensaje.move(self.pos().x()+500, self.pos().y()+400)   # Pocision donde aparecera el mensaje y el tamaño de este
+        self.mensaje.exec_()  # Para cerrar el mensaje         
 
 if __name__ == "__main__":
 
