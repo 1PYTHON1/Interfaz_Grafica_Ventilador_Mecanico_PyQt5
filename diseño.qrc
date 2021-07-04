@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="design">
+    <file>iconos/mdi_led-on.png</file>
+    <file>iconos/Vector.png</file>
     <file>iconos/akar-icons_circle-chevron-down-fill (1).png</file>
     <file>iconos/akar-icons_circle-chevron-down-fill (2).png</file>
     <file>iconos/akar-icons_circle-chevron-down-fill (3).png</file>

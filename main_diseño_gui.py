@@ -9,7 +9,6 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import numpy as np  # Importamos numpy para manejar matrices de nuestros datos obtenidas de arduino
 import qdarkstyle  # Para darle un estilo oscuro a nuestra interfaz graficas diseñada en PyQt5
-import time
 
 # fin de la importacion de dependencias
 
@@ -25,6 +24,7 @@ def recibir_datos(self):
     try:
         lista = []
         for i in range(3):
+
             dato = ser.readline()  # Lee el la cadena de byte del puerto serial
             dato = str(dato.decode()).replace('\r','')  # decodifica el byte a str y quita el retorno "\r"
             dato = dato.replace('\n','')  # Quita del str el salto de linea "\n"
@@ -59,7 +59,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         #variables del ventana principal
         self.pase_on = 0  # condicionara que se debe conectar el puerto serie primero
-        self.frecuencia_lcd = 30 # comienza con 10
+        self.frecuencia_lcd = 15 # setea la frecuencia de inicio
+        self.volumen_controlado = 0  # valor de ingreso para volumen control
+        # variables globales 
+        self.contador  = 0
+        self.dato_y_flujo = np.array([])  # Matriz que guadara los datos del flujo recibidos de arduino 
+        self.dato_y_volumen = np.array([])  # Matriz que guadara los datos del volumen recibidos de arduino 
+        self.dato_x = np.array([])   # Matriz que guadara los datos del tiempo 
+        self.dato_y_presion = np.array([])   # Matriz que guadara los datos de la presion recibidos de arduino
+        self.dato_int = 0  # variable que recibe los datos de arduino
+        self.posicion_com  = 0  # Posicion Index del combobox, COM del serial
+        self.com_seleccionado = 0  # Puerto COM seleccionado start
+        self.dato_lcd_peep = 5  # Comienza con el valor de PEEP en 5
+        self.dato_lcd_peep_confirmado = 5  # Variable de confirmacion del PEEP comienza en 5
+        self.sistema_activado = 0  # Toma dos valores verdadero o falso
+        self.modo_de_control = "volumen_control"  # Guardamos el Modo de Control por default VC
+        self.label_peep_actual.setText(str(self.dato_lcd_peep_confirmado))  # Setea la etiqueta con el valor de PEEP 
+        self.lcdNumber_peep.display(self.dato_lcd_peep)  # Mostrara el VALOR de PEEP inicial que es 5
         ################################
         
         self.lcdNumber_frecuencia.display(self.frecuencia_lcd)
@@ -74,6 +90,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pushButton_confirmar_peep.clicked.connect(self.confirmar_peep_funcion)
         self.pushButton_encender_vm.clicked.connect(self.activar_sistema)
         self.pushButton_apagar_vm.clicked.connect(self.desactivar_sistema)
+        self.pushButton_vc.clicked.connect(self.modo_volumen_control)
+        self.pushButton_pc.clicked.connect(self.modo_presion_control)
+        self.pushButton_incrementar_volumen.clicked.connect(self.incrementar_volumen)
+        self.pushButton_decrementar_volumen.clicked.connect(self.decrementar_volumen)
         
 
         #FIGURA DINAMICA_1
@@ -85,12 +105,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         #Ploteamos la figura dinamica
         self._dynamic_ax_1 = self.dynamic_canvas_1.figure.subplots()
         self._dynamic_ax_1.grid()
+        self._dynamic_ax_1.set_ylabel("PRESION")
+        self._dynamic_ax_1.set_title("PRESION")  # Agregamos titulo al  grafica de Presion 
         t = np.linspace(0, 800 , 800)
         # Set up a Line2D.
         #self._line, = self._dynamic_ax.plot(t, np.in(t + time.time()))     
         self._line, = self._dynamic_ax_1.plot(t, np.linspace(0,40,800),"g")
         self._timer = self.dynamic_canvas_1.new_timer(1)  # hace una actualizacion cada 1 milisegundo
-        self._timer.add_callback(self._update_canvas)
+        self._timer.add_callback(self.actualizacion_grafica)
         #self._timer.start()
         #FIGURA DINAMICA 1
 
@@ -104,6 +126,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         #Ploteamos la figura dinamica
         self._dynamic_ax_2 = self.dynamic_canvas_2.figure.subplots()
         self._dynamic_ax_2.grid()
+        self._dynamic_ax_2.set_ylabel("FLUJO")
+        self._dynamic_ax_2.set_title("FLUJO")  # Agregamos titulo al  grafica de Presion 
+
         # Set up a Line2D.
         #self._line, = self._dynamic_ax.plot(t, np.in(t + time.time()))
         self._line_2, = self._dynamic_ax_2.plot(t, np.linspace(-300,300,800),"b")
@@ -122,6 +147,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         #Ploteamos la figura dinamica
         self._dynamic_ax_3 = self.dynamic_canvas_3.figure.subplots()
         self._dynamic_ax_3.grid()
+        self._dynamic_ax_3.set_ylabel("VOLUMEN")
+        self._dynamic_ax_3.set_title("VOLUMEN")  # Agregamos titulo al  grafica de Presion 
+
         # Set up a Line2D.
         #self._line, = self._dynamic_ax.plot(t, np.in(t + time.time()))
         self._line_3, = self._dynamic_ax_3.plot(t, np.linspace(0,300,800),"r")
@@ -130,22 +158,29 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         #self._timer_3.start()
         #FIGURA DINAMICA 3
 
-        self.contador  = 0
-        self.dato_y_flujo = np.array([])  # Matriz que guadara los datos del flujo recibidos de arduino 
-        self.dato_y_volumen = np.array([])  # Matriz que guadara los datos del volumen recibidos de arduino 
-        self.dato_x = np.array([])   # Matriz que guadara los datos del tiempo 
-        self.dato_y_presion = np.array([])   # Matriz que guadara los datos de la presion recibidos de arduino
-        self.dato_int = 0  # variable que recibe los datos de arduino
-        self.posicion_com  = 0  # Posicion Index del combobox, COM del serial
-        self.com_seleccionado = 0  # Puerto COM seleccionado start
-        self.dato_lcd_peep = 5  # Comienza con el valor de PEEP en 5
-        self.dato_lcd_peep_confirmado = 5  # Variable de confirmacion del PEEP comienza en 5
-        self.sistema_activado = 0  # Toma dos valores verdadero o falso
-        self.label_peep_actual.setText(str(self.dato_lcd_peep_confirmado))  # Setea la etiqueta con el valor de PEEP 
-        self.lcdNumber_peep.display(self.dato_lcd_peep)  # Mostrara el VALOR de PEEP inicial que es 5
+    def incrementar_volumen(self):
+        if self.volumen_controlado < 800:
+            self.volumen_controlado += 10
+            self.lcdNumber_volumen_entrada.display(self.volumen_controlado)
+    def decrementar_volumen(self):
+        if self.volumen_controlado > 0:
+            self.volumen_controlado -= 10
+            self.lcdNumber_volumen_entrada.display(self.volumen_controlado)
+    def modo_volumen_control(self):
+        self.label_modo.setText("VOLUMEN CONTROL")
+        self.led_vc_on.show()
+        self.led_vc_off.close()
+        self.led_pc_off.show()
+        self.led_pc_on.close()
+
+    def modo_presion_control(self):
+        self.label_modo.setText("PRESION CONTROL")
+        self.led_vc_off.show()
+        self.led_vc_on.close()
+        self.led_pc_on.show()
+        self.led_pc_off.close()
 
 
-        # factor de escala de 255 - 0 a valores de reales de medicion 
 
 
     def activar_sistema(self):
@@ -221,20 +256,22 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lcdNumber_frecuencia.display(self.frecuencia_lcd)  # Muesta la frecuencia actual en LCD_FRECUENCIA
 
     def incrementar_peep_funcion(self):
-        if self.dato_lcd_peep < 20:  # Condiciona que el maximo valor de peep ingresado sea 20
-            self.dato_lcd_peep += 1  # Incrementa en uno el valor de peep
-            self.lcdNumber_peep.display(self.dato_lcd_peep)  # Muestra los datos al LCD_PEEP
+        if self.pase_on == 1:
+            if self.dato_lcd_peep < 20:  # Condiciona que el maximo valor de peep ingresado sea 20
+                self.dato_lcd_peep += 1  # Incrementa en uno el valor de peep
+                self.lcdNumber_peep.display(self.dato_lcd_peep)  # Muestra los datos al LCD_PEEP
 
     def decrementar_peep_funcion(self):
-        if self.dato_lcd_peep>=6:  # Condiciona que el minimo valor de peep ingresado sea 5
-            self.dato_lcd_peep -= 1  # Decrementa en uno el valor de peep
-            self.lcdNumber_peep.display(self.dato_lcd_peep)  # Muestra los datos al LCD_PEEP
+        if self.pase_on == 1:
+            if self.dato_lcd_peep>=6:  # Condiciona que el minimo valor de peep ingresado sea 5
+                self.dato_lcd_peep -= 1  # Decrementa en uno el valor de peep
+                self.lcdNumber_peep.display(self.dato_lcd_peep)  # Muestra los datos al LCD_PEEP
 
     def confirmar_peep_funcion(self): 
         self.dato_lcd_peep_confirmado = self.dato_lcd_peep  
         self.label_peep_actual.setText(str(self.dato_lcd_peep_confirmado))
 
-    def _update_canvas(self):
+    def actualizacion_grafica(self):
 
         if self.sistema_activado == 1:
 
@@ -245,6 +282,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.dato_y_presion = np.append(self.dato_y_presion, (lista_datos[0]*30/255) + self.dato_lcd_peep_confirmado)
             self.dato_y_flujo = np.append(self.dato_y_flujo,lista_datos[1])
             self.dato_y_volumen = np.append(self.dato_y_volumen, lista_datos[2])
+
             # PLOTER DE LA SEÑAL
             self._line_3.set_data(self.dato_x,self.dato_y_volumen)
             self._line_3.figure.canvas.draw()
@@ -253,7 +291,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self._line.set_data(self.dato_x,self.dato_y_presion)
             self._line.figure.canvas.draw()
             # Fin del PLoter de la señal
-            self.lcdNumber_presion.display(lista_datos[0])
+
+            #Mandamos la señal al LCD de la presion 
+            self.lcdNumber_presion.display(lista_datos[0]*30/255 + self.dato_lcd_peep_confirmado)
+
             if self.contador == 800:
                 self.contador = 0 
                 self.dato_x = np.array([])
