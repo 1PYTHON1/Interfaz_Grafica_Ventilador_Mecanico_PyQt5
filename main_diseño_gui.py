@@ -1,8 +1,7 @@
 ####### Diseño de Interfaz Grafica BY Jose ID ####
 
 # Importamos las libreria
-
-from diseño import *  # importamos el modulo de nuestro diseño en PyQt5
+from diseño import *
 import serial  # Importamos serial para la comunicacion serial con arduino
 import matplotlib.pyplot as plt  # Importamos matplotlib para mostrar las graficas
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas,NavigationToolbar2QT as NavigationToolbar
@@ -117,46 +116,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         #FIGURA DINAMICA 1
 
 
-        #FIGURA DINAMICA_2
-        self.dynamic_canvas_2 = FigureCanvas(Figure(figsize=(5, 3)))
-        self.addToolBar(QtCore.Qt.BottomToolBarArea,
-                        NavigationToolbar(self.dynamic_canvas_2, self))
-        self.verticalLayout_signal_2.addWidget(self.dynamic_canvas_2)
 
-        #Ploteamos la figura dinamica
-        self._dynamic_ax_2 = self.dynamic_canvas_2.figure.subplots()
-        self._dynamic_ax_2.grid()
-        self._dynamic_ax_2.set_ylabel("FLUJO")
-        self._dynamic_ax_2.set_title("FLUJO")  # Agregamos titulo al  grafica de Presion 
-
-        # Set up a Line2D.
-        #self._line, = self._dynamic_ax.plot(t, np.in(t + time.time()))
-        self._line_2, = self._dynamic_ax_2.plot(t, np.linspace(-300,300,800),"b")
-        #self._timer_2 = self.dynamic_canvas_2.new_timer(50)
-        #self._timer_2.add_callback(self._update_canvas_2)
-        #self._timer_2.start()
-        #FIGURA DINAMICA 3
-
-
-        #FIGURA DINAMICA_3
-        self.dynamic_canvas_3 = FigureCanvas(Figure(figsize=(5, 3)))
-        self.addToolBar(QtCore.Qt.BottomToolBarArea,
-                        NavigationToolbar(self.dynamic_canvas_3, self))
-        self.verticalLayout_signal_3.addWidget(self.dynamic_canvas_3)
-
-        #Ploteamos la figura dinamica
-        self._dynamic_ax_3 = self.dynamic_canvas_3.figure.subplots()
-        self._dynamic_ax_3.grid()
-        self._dynamic_ax_3.set_ylabel("VOLUMEN")
-        self._dynamic_ax_3.set_title("VOLUMEN")  # Agregamos titulo al  grafica de Presion 
-
-        # Set up a Line2D.
-        #self._line, = self._dynamic_ax.plot(t, np.in(t + time.time()))
-        self._line_3, = self._dynamic_ax_3.plot(t, np.linspace(0,300,800),"r")
-        #self._timer_3 = self.dynamic_canvas_3.new_timer(50)
-        #self._timer_3.add_callback(self._update_canvas_3)
-        #self._timer_3.start()
-        #FIGURA DINAMICA 3
 
     def incrementar_volumen(self):
         if self.volumen_controlado < 800:
@@ -323,7 +283,7 @@ if __name__ == "__main__":
     #plt.style.use("seaborn-colorblind")
     #Style MatplotLib
 
-    app.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt5'))
+    #app.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt5'))
     window = MainWindow()
     window.show()
     app.exec_()
