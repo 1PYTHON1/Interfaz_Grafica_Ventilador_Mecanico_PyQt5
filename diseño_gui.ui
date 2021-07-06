@@ -18,7 +18,6 @@
   </property>
   <property name="font">
    <font>
-    <family>Montserrat</family>
     <pointsize>5</pointsize>
    </font>
   </property>
@@ -74,9 +73,9 @@
    <widget class="QPushButton" name="pushButton_pc">
     <property name="geometry">
      <rect>
-      <x>1060</x>
-      <y>60</y>
-      <width>120</width>
+      <x>1070</x>
+      <y>390</y>
+      <width>101</width>
       <height>41</height>
      </rect>
     </property>
@@ -110,12 +109,12 @@
      <layout class="QVBoxLayout" name="verticalLayout_signal_3"/>
     </widget>
    </widget>
-   <widget class="QPushButton" name="pushButton_vc">
+   <widget class="QPushButton" name="pushButton__vc">
     <property name="geometry">
      <rect>
       <x>920</x>
-      <y>60</y>
-      <width>120</width>
+      <y>390</y>
+      <width>101</width>
       <height>41</height>
      </rect>
     </property>
@@ -131,10 +130,10 @@
    <widget class="QPushButton" name="pushButton_frecuencia_up">
     <property name="geometry">
      <rect>
-      <x>1050</x>
-      <y>340</y>
-      <width>53</width>
-      <height>53</height>
+      <x>950</x>
+      <y>600</y>
+      <width>200</width>
+      <height>50</height>
      </rect>
     </property>
     <property name="font">
@@ -142,27 +141,17 @@
       <pointsize>12</pointsize>
      </font>
     </property>
-    <property name="styleSheet">
-     <string notr="true">#pushButton_frecuencia_up
-{
-background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (1).png);
-}
-#pushButton_frecuencia_up:hover
-{
-background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (2).png);
-}</string>
-    </property>
     <property name="text">
-     <string/>
+     <string>AUMENTAR FRECUENCIA</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_frecuencia_down">
     <property name="geometry">
      <rect>
-      <x>1120</x>
-      <y>340</y>
-      <width>53</width>
-      <height>53</height>
+      <x>950</x>
+      <y>670</y>
+      <width>200</width>
+      <height>50</height>
      </rect>
     </property>
     <property name="font">
@@ -170,17 +159,8 @@ background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (2).pn
       <pointsize>12</pointsize>
      </font>
     </property>
-    <property name="styleSheet">
-     <string notr="true">#pushButton_frecuencia_down{
-background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill.png);
-}
-#pushButton_frecuencia_down:hover{
-background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (3).png);
-}
-</string>
-    </property>
     <property name="text">
-     <string/>
+     <string>DISMINUIR FRECUENCIA</string>
     </property>
    </widget>
    <widget class="QLCDNumber" name="lcdNumber_presion">
@@ -216,9 +196,9 @@ background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (3).pn
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>180</x>
+      <x>200</x>
       <y>160</y>
-      <width>71</width>
+      <width>51</width>
       <height>31</height>
      </rect>
     </property>
@@ -237,9 +217,9 @@ background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (3).pn
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>180</x>
+      <x>190</x>
       <y>190</y>
-      <width>71</width>
+      <width>61</width>
       <height>31</height>
      </rect>
     </property>
@@ -258,9 +238,9 @@ background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (3).pn
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>180</x>
+      <x>190</x>
       <y>390</y>
-      <width>71</width>
+      <width>61</width>
       <height>31</height>
      </rect>
     </property>
@@ -279,9 +259,9 @@ background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (3).pn
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>160</x>
       <y>360</y>
-      <width>101</width>
+      <width>91</width>
       <height>31</height>
      </rect>
     </property>
@@ -300,9 +280,9 @@ background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (3).pn
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>180</x>
+      <x>190</x>
       <y>560</y>
-      <width>71</width>
+      <width>61</width>
       <height>31</height>
      </rect>
     </property>
@@ -342,25 +322,11 @@ background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (3).pn
    <widget class="QLCDNumber" name="lcdNumber_frecuencia">
     <property name="geometry">
      <rect>
-      <x>920</x>
-      <y>340</y>
-      <width>121</width>
-      <height>51</height>
+      <x>960</x>
+      <y>490</y>
+      <width>180</width>
+      <height>100</height>
      </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">#lcdNumber_frecuencia{
-
-border: 2px solid rgb(72, 72, 72);
-
-
-}
-#lcdNumber_frecuencia:hover{
-
-border: 2px solid  rgb(190, 190, 190);
-
-}
-</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_conectar_serial">
@@ -368,7 +334,7 @@ border: 2px solid  rgb(190, 190, 190);
      <rect>
       <x>20</x>
       <y>710</y>
-      <width>141</width>
+      <width>131</width>
       <height>41</height>
      </rect>
     </property>
@@ -395,8 +361,6 @@ border: 2px solid  rgb(190, 190, 190);
     <property name="font">
      <font>
       <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
      </font>
     </property>
     <item>
@@ -435,7 +399,7 @@ border: 2px solid  rgb(190, 190, 190);
      <rect>
       <x>330</x>
       <y>710</y>
-      <width>141</width>
+      <width>131</width>
       <height>41</height>
      </rect>
     </property>
@@ -450,11 +414,32 @@ border: 2px solid  rgb(190, 190, 190);
      <string>DESCONECTAR</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton_sincronizar_datos">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>PLOTER ON</string>
+    </property>
+   </widget>
    <widget class="QLCDNumber" name="lcdNumber_peep">
     <property name="geometry">
      <rect>
-      <x>920</x>
-      <y>455</y>
+      <x>910</x>
+      <y>60</y>
       <width>121</width>
       <height>51</height>
      </rect>
@@ -480,8 +465,8 @@ border: 2px solid  rgb(190, 190, 190);
    <widget class="QPushButton" name="pushButton_incrementar_peep">
     <property name="geometry">
      <rect>
-      <x>1050</x>
-      <y>455</y>
+      <x>1040</x>
+      <y>60</y>
       <width>53</width>
       <height>53</height>
      </rect>
@@ -503,8 +488,8 @@ background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (2).pn
    <widget class="QPushButton" name="pushButton_decrementar_peep">
     <property name="geometry">
      <rect>
-      <x>1120</x>
-      <y>455</y>
+      <x>1110</x>
+      <y>60</y>
       <width>53</width>
       <height>53</height>
      </rect>
@@ -525,8 +510,8 @@ background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (3).pn
    <widget class="QPushButton" name="pushButton_confirmar_peep">
     <property name="geometry">
      <rect>
-      <x>1050</x>
-      <y>525</y>
+      <x>1040</x>
+      <y>130</y>
       <width>122</width>
       <height>31</height>
      </rect>
@@ -554,8 +539,8 @@ color: rgb(170, 255, 255);
    <widget class="QLabel" name="label_8">
     <property name="geometry">
      <rect>
-      <x>920</x>
-      <y>510</y>
+      <x>910</x>
+      <y>115</y>
       <width>121</width>
       <height>31</height>
      </rect>
@@ -564,23 +549,21 @@ color: rgb(170, 255, 255);
      <font>
       <family>Montserrat</family>
       <pointsize>11</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
      </font>
     </property>
     <property name="text">
-     <string>PEEP </string>
+     <string>PEEP    cmH2O</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>190</x>
+      <x>200</x>
       <y>220</y>
-      <width>61</width>
+      <width>51</width>
       <height>21</height>
      </rect>
     </property>
@@ -681,269 +664,6 @@ border: 2px solid rgb(255, 255, 255);
     </property>
     <property name="text">
      <string>APAGADO</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_9">
-    <property name="geometry">
-     <rect>
-      <x>920</x>
-      <y>400</y>
-      <width>121</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Montserrat</family>
-      <pointsize>11</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>FR </string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QLCDNumber" name="lcdNumber_volumen_entrada">
-    <property name="geometry">
-     <rect>
-      <x>920</x>
-      <y>230</y>
-      <width>121</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">#lcdNumber_volumen_entrada{
-
-border: 2px solid rgb(72, 72, 72);
-
-
-}
-#lcdNumber_volumen_entrada:hover{
-
-border: 2px solid  rgb(190, 190, 190);
-
-}
-</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_10">
-    <property name="geometry">
-     <rect>
-      <x>920</x>
-      <y>290</y>
-      <width>121</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Montserrat</family>
-      <pointsize>11</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>l/min</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_decrementar_volumen">
-    <property name="geometry">
-     <rect>
-      <x>1120</x>
-      <y>230</y>
-      <width>53</width>
-      <height>53</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">#pushButton_decrementar_volumen{
-background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill.png);
-}
-#pushButton_decrementar_volumen:hover{
-background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (3).png);
-}
-</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_incrementar_volumen">
-    <property name="geometry">
-     <rect>
-      <x>1050</x>
-      <y>230</y>
-      <width>53</width>
-      <height>53</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">#pushButton_incrementar_volumen
-{
-background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (1).png);
-}
-#pushButton_incrementar_volumen:hover
-{
-background-image: url(:/design/iconos/akar-icons_circle-chevron-down-fill (2).png);
-}</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_11">
-    <property name="geometry">
-     <rect>
-      <x>270</x>
-      <y>20</y>
-      <width>111</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>16</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>MODO</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_modo">
-    <property name="geometry">
-     <rect>
-      <x>470</x>
-      <y>20</y>
-      <width>261</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Montserrat</family>
-      <pointsize>16</pointsize>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">#label_modo{
-font: 16pt &quot;Montserrat&quot;;
-border: 2px solid rgb(255, 255, 255);
-}</string>
-    </property>
-    <property name="text">
-     <string>VOLUMEN CONTROL</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QFrame" name="led_vc_on">
-    <property name="geometry">
-     <rect>
-      <x>950</x>
-      <y>110</y>
-      <width>53</width>
-      <height>53</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">#led_vc_on{
-background-image: url(:/design/iconos/mdi_led-on.png);
-}</string>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-   </widget>
-   <widget class="QFrame" name="led_pc_on">
-    <property name="geometry">
-     <rect>
-      <x>1090</x>
-      <y>110</y>
-      <width>53</width>
-      <height>53</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">#led_pc_on{
-background-image: url(:/design/iconos/mdi_led-on.png);
-}</string>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-   </widget>
-   <widget class="QFrame" name="led_vc_off">
-    <property name="geometry">
-     <rect>
-      <x>950</x>
-      <y>110</y>
-      <width>53</width>
-      <height>53</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">#led_vc_off
-{
-background-image: url(:/design/iconos/Vector.png);
-}</string>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-   </widget>
-   <widget class="QFrame" name="led_pc_off">
-    <property name="geometry">
-     <rect>
-      <x>1090</x>
-      <y>110</y>
-      <width>53</width>
-      <height>53</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">#led_pc_off{
-background-image: url(:/design/iconos/Vector.png);
-}</string>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
     </property>
    </widget>
   </widget>
