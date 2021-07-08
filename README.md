@@ -4,6 +4,7 @@
 - PyQt5
 - Numpy
 - Serial
+- PythonQwt
 
 Para mostrar los datos mediante señales con matplotlib y modificar dichos valores  📊📈📉
 
