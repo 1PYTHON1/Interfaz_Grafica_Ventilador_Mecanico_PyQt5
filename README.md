@@ -11,7 +11,7 @@ Para mostrar los datos mediante señales con matplotlib y modificar dichos valor
 
 ![Rectangle2](https://user-images.githubusercontent.com/35740463/114885390-36033080-9dcc-11eb-9003-29e472e3c8ff.jpg)
 <p align ="center">
-   <img src="https://res.cloudinary.com/pythonid/image/upload/v1625234003/0eedeea5-51ec-44cc-8f24-5989b75d813e_psil8z.jpg" alt="banner" width="800"><br/>
+   <img src="https://res.cloudinary.com/pythonid/image/upload/v1625705633/imagen_2021-07-07_195351_hpbq6m.png" alt="banner" width="800"><br/>
 </p>
 
 ![Rectangle2](https://user-images.githubusercontent.com/35740463/114885390-36033080-9dcc-11eb-9003-29e472e3c8ff.jpg)
