@@ -35,8 +35,14 @@
       <x>269</x>
       <y>60</y>
       <width>631</width>
-      <height>200</height>
+      <height>571</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">*
+{
+background-color: rgb(67, 67, 67);
+}</string>
     </property>
     <widget class="QWidget" name="verticalLayoutWidget">
      <property name="geometry">
@@ -44,31 +50,10 @@
        <x>0</x>
        <y>0</y>
        <width>631</width>
-       <height>191</height>
+       <height>571</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_signal_1"/>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="signal_2" native="true">
-    <property name="geometry">
-     <rect>
-      <x>269</x>
-      <y>260</y>
-      <width>631</width>
-      <height>200</height>
-     </rect>
-    </property>
-    <widget class="QWidget" name="verticalLayoutWidget_2">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>631</width>
-       <height>191</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_signal_2"/>
     </widget>
    </widget>
    <widget class="QPushButton" name="pushButton_pc">
@@ -88,27 +73,6 @@
     <property name="text">
      <string>PC</string>
     </property>
-   </widget>
-   <widget class="QWidget" name="signal_3" native="true">
-    <property name="geometry">
-     <rect>
-      <x>269</x>
-      <y>460</y>
-      <width>631</width>
-      <height>200</height>
-     </rect>
-    </property>
-    <widget class="QWidget" name="verticalLayoutWidget_6">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>631</width>
-       <height>191</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_signal_3"/>
-    </widget>
    </widget>
    <widget class="QPushButton" name="pushButton_vc">
     <property name="geometry">
@@ -953,7 +917,7 @@ background-image: url(:/design/iconos/Vector.png);
      <x>0</x>
      <y>0</y>
      <width>1200</width>
-     <height>15</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

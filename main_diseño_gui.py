@@ -9,47 +9,9 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import numpy as np  # Importamos numpy para manejar matrices de nuestros datos obtenidas de arduino
 import qdarkstyle  # Para darle un estilo oscuro a nuestra interfaz graficas diseñada en PyQt5
-
+import puerto_serial  # PARA ENVIAR Y RECIBIR DATOS DEL PUERTO SERIE
+import signal_from_arduino  as signal_arduino
 # fin de la importacion de dependencias
-
-def abrir_puerto(self,com_puerto):
-    global ser  # variable global ser 
-    try:
-        ser = serial.Serial(com_puerto,9600)
-        return True
-    except:
-        return False
-
-def recibir_datos(self):
-    try:
-        lista = []
-        for i in range(3):
-
-            dato = ser.readline()  # Lee el la cadena de byte del puerto serial
-            dato = str(dato.decode()).replace('\r','')  # decodifica el byte a str y quita el retorno "\r"
-            dato = dato.replace('\n','')  # Quita del str el salto de linea "\n"
-            if len(dato) > 0 :  # Verifica que cadena de texto (str) no este vacio
-                lista.append(int(dato))  # Convierte el str a un int (entero)
-            else:
-                lista.append(0)
-        return lista  # retorna los datos en una lista 
-    except:
-        dato = [0,0,0]  # En caso que haya falsa lectura se enviara 0 para no generar errore
-        return dato  # Retorn a la lista de datos [0,0,0]
-
-def enviar_datos(self,dato):
-    if dato == "activar_sistema":
-        ser.write(b'2\r\n')
-    if dato == "desactivar_sistema":
-        ser.write(b'3\r\n')
-    if dato == "enviar_frecuencia":
-        ser.write(b'0\r\n')  # POR DEFINIR 
-    if dato == "incrementar_frecuencia":
-        ser.write(b'1')
-    if dato == "decrementar_frecuencia":
-        ser.write(b'0')
-def deconectar_puerto(self):
-    ser.close()
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -95,68 +57,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pushButton_incrementar_volumen.clicked.connect(self.incrementar_volumen)
         self.pushButton_decrementar_volumen.clicked.connect(self.decrementar_volumen)
         
-
-        #FIGURA DINAMICA_1
-        self.dynamic_canvas_1 = FigureCanvas(Figure(figsize=(5, 3),dpi=100))
-        self.addToolBar(QtCore.Qt.BottomToolBarArea,
-                        NavigationToolbar(self.dynamic_canvas_1, self))
-        self.verticalLayout_signal_1.addWidget(self.dynamic_canvas_1)
-
-        #Ploteamos la figura dinamica
-        self._dynamic_ax_1 = self.dynamic_canvas_1.figure.subplots()
-        self._dynamic_ax_1.grid()
-        self._dynamic_ax_1.set_ylabel("PRESION")
-        self._dynamic_ax_1.set_title("PRESION")  # Agregamos titulo al  grafica de Presion 
         t = np.linspace(0, 800 , 800)
-        # Set up a Line2D.
-        #self._line, = self._dynamic_ax.plot(t, np.in(t + time.time()))     
-        self._line, = self._dynamic_ax_1.plot(t, np.linspace(0,40,800),"g")
-        self._timer = self.dynamic_canvas_1.new_timer(1)  # hace una actualizacion cada 1 milisegundo
-        self._timer.add_callback(self.actualizacion_grafica)
-        #self._timer.start()
-        #FIGURA DINAMICA 1
+       
+        #self.verticalLayout_signal_1.addWidget(signal_arduino.all_signal(self))
 
-
-        #FIGURA DINAMICA_2
-        self.dynamic_canvas_2 = FigureCanvas(Figure(figsize=(5, 3)))
-        self.addToolBar(QtCore.Qt.BottomToolBarArea,
-                        NavigationToolbar(self.dynamic_canvas_2, self))
-        self.verticalLayout_signal_2.addWidget(self.dynamic_canvas_2)
-
-        #Ploteamos la figura dinamica
-        self._dynamic_ax_2 = self.dynamic_canvas_2.figure.subplots()
-        self._dynamic_ax_2.grid()
-        self._dynamic_ax_2.set_ylabel("FLUJO")
-        self._dynamic_ax_2.set_title("FLUJO")  # Agregamos titulo al  grafica de Presion 
-
-        # Set up a Line2D.
-        #self._line, = self._dynamic_ax.plot(t, np.in(t + time.time()))
-        self._line_2, = self._dynamic_ax_2.plot(t, np.linspace(-300,300,800),"b")
-        #self._timer_2 = self.dynamic_canvas_2.new_timer(50)
-        #self._timer_2.add_callback(self._update_canvas_2)
-        #self._timer_2.start()
-        #FIGURA DINAMICA 3
-
-
-        #FIGURA DINAMICA_3
-        self.dynamic_canvas_3 = FigureCanvas(Figure(figsize=(5, 3)))
-        self.addToolBar(QtCore.Qt.BottomToolBarArea,
-                        NavigationToolbar(self.dynamic_canvas_3, self))
-        self.verticalLayout_signal_3.addWidget(self.dynamic_canvas_3)
-
-        #Ploteamos la figura dinamica
-        self._dynamic_ax_3 = self.dynamic_canvas_3.figure.subplots()
-        self._dynamic_ax_3.grid()
-        self._dynamic_ax_3.set_ylabel("VOLUMEN")
-        self._dynamic_ax_3.set_title("VOLUMEN")  # Agregamos titulo al  grafica de Presion 
-
-        # Set up a Line2D.
-        #self._line, = self._dynamic_ax.plot(t, np.in(t + time.time()))
-        self._line_3, = self._dynamic_ax_3.plot(t, np.linspace(0,300,800),"r")
-        #self._timer_3 = self.dynamic_canvas_3.new_timer(50)
-        #self._timer_3.add_callback(self._update_canvas_3)
-        #self._timer_3.start()
-        #FIGURA DINAMICA 3
+     
 
     def incrementar_volumen(self):
         if self.volumen_controlado < 800:
@@ -185,40 +90,31 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def activar_sistema(self):
         if self.pase_on==1:
-            enviar_datos(self,"activar_sistema")
+            puerto_serial.enviar_datos("activar_sistema")
             self.mostrar_mensaje("Sistema Activado")
             self.sistema_activado = 1
-            self._timer.start()  ### Comienza a recibir las señales y activa al timer
+            self.verticalLayout_signal_1.addWidget(signal_arduino.all_signal(self))
+            ### Comienza a recibir las señales y activa al timer
         if self.pase_on==0:
             self.mostrar_mensaje("Conectar el Puerto Serie")
 
 
     def desactivar_sistema(self):
         if self.pase_on == 1:
-            self._timer.stop()  # Desactiva el timer y da en pausa la peticion de datos
-            enviar_datos(self,"desactivar_sistema")
-            deconectar_puerto(self)
+            puerto_serial.enviar_datos("desactivar_sistema")
+            puerto_serial.cerrar_puerto()
             self.pase_on = 0
             self.contador  = 0
             self.sistema_activado = 0
-            self.dato_y_volumen = np.array([])
-            self.dato_y_flujo = np.array([]) 
-            self.dato_x = np.array([])
-            self.dato_y_presion = np.array([])
             self.mostrar_mensaje("Se Apaga el Sistema")
 
     def desconectar_puerto(self):
         if self.pase_on == 1:
-            self._timer.stop()  # Desactiva el timer y da en pausa la peticion de datos
-            enviar_datos(self,"desactivar_sistema")
-            deconectar_puerto(self)
+            puerto_serial.enviar_datos("desactivar_sistema")
+            puerto_serial.cerrar_puerto()
             self.pase_on = 0
             self.contador  = 0
             self.sistema_activado = 0
-            self.dato_y_volumen = np.array([])
-            self.dato_y_flujo = np.array([]) 
-            self.dato_x = np.array([])
-            self.dato_y_presion = np.array([])
             self.mostrar_mensaje("Se Desconecto del Puerto COM")
 
     def conectar_puerto(self):
@@ -232,7 +128,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.posicion_com = self.comboBox.currentIndex()
 
 
-            if abrir_puerto(self,self.com_seleccionado):  # Conecta a puerto serie y retorna True or False
+            if puerto_serial.conectar_puerto(self.com_seleccionado):  # Conecta a puerto serie y retorna True or False
                 self.pase_on = 1
                 self.mostrar_mensaje(f"Se a Conectado al puerto Serial {self.com_seleccionado}")
 
@@ -245,14 +141,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if self.pase_on == 1:
             if self.frecuencia_lcd<30:  # Condiciona que la frecunecia respiratora no supere los 30 rpm
                 self.frecuencia_lcd += 1  # Incrementa la frecuencia en uno
-                enviar_datos(self,"incrementar_frecuencia")
+                puerto_serial.enviar_datos("incrementar_frecuencia")
             self.lcdNumber_frecuencia.display(self.frecuencia_lcd)  # Muesta la frecuencia actual en LCD_FRECUENCIA
 
     def decrementar_frecuencia(self):
         if self.pase_on == 1:
             if self.frecuencia_lcd>10:  # Condiciona que la frecunecia respiratora no baje las 10 rpm
                 self.frecuencia_lcd -= 1  # Decrementa la frecuencia en uno
-                enviar_datos(self,"decrementar_frecuencia")
+                puerto_serial.enviar_datos("decrementar_frecuencia")
             self.lcdNumber_frecuencia.display(self.frecuencia_lcd)  # Muesta la frecuencia actual en LCD_FRECUENCIA
 
     def incrementar_peep_funcion(self):
@@ -270,37 +166,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def confirmar_peep_funcion(self): 
         self.dato_lcd_peep_confirmado = self.dato_lcd_peep  
         self.label_peep_actual.setText(str(self.dato_lcd_peep_confirmado))
-
-    def actualizacion_grafica(self):
-
-        if self.sistema_activado == 1:
-
-            self.contador += 1#*(1/(self.frecuencia_lcd/2))
-            self.dato_x = np.append(self.dato_x,self.contador) 
-            lista_datos = recibir_datos(self)  # Retorna una lista con dos datos flujo y presion
-
-            self.dato_y_presion = np.append(self.dato_y_presion, (lista_datos[0]*30/255) + self.dato_lcd_peep_confirmado)
-            self.dato_y_flujo = np.append(self.dato_y_flujo,lista_datos[1])
-            self.dato_y_volumen = np.append(self.dato_y_volumen, lista_datos[2])
-
-            # PLOTER DE LA SEÑAL
-            self._line_3.set_data(self.dato_x,self.dato_y_volumen)
-            self._line_3.figure.canvas.draw()
-            self._line_2.set_data(self.dato_x,self.dato_y_flujo)
-            self._line_2.figure.canvas.draw()
-            self._line.set_data(self.dato_x,self.dato_y_presion)
-            self._line.figure.canvas.draw()
-            # Fin del PLoter de la señal
-
-            #Mandamos la señal al LCD de la presion 
-            self.lcdNumber_presion.display(lista_datos[0]*30/255 + self.dato_lcd_peep_confirmado)
-
-            if self.contador == 800:
-                self.contador = 0 
-                self.dato_x = np.array([])
-                self.dato_y_presion = np.array([])
-                self.dato_y_flujo = np.array([])
-                self.dato_y_volumen = np.array([])
 
 
     def mostrar_mensaje(self,mensaje):  # Funcion para Mostrar mensajes de alerta 
@@ -328,6 +193,6 @@ if __name__ == "__main__":
     window.show()
     app.exec_()
     try:
-        ser.close()
+        puerto_serial.cerrar_puerto()
     except:
         None
