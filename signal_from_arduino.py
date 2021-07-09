@@ -6,8 +6,8 @@ from qtpy.QtWidgets import QGridLayout, QWidget
 from qtpy.QtGui import QPen
 from qtpy.QtCore import Qt
 from qwt import QwtPlot, QwtPlotCurve
-import puerto_serial 
-
+import puerto_serial    ## se recibe los datos por el puerto serie de arduino 
+import variables_globales  ## para manipular el control de todos los scripts 
 
 def drange(start, stop, step):
     start, stop, step = float(start), float(stop), float(step)
@@ -87,22 +87,27 @@ class all_signal(QWidget):
         self.startTimer(10)
 
     def timerEvent(self,e):
-        lista_datos = puerto_serial.recibir_datos_signal() 
+        if variables_globales.estado_signal(): ### Condiciona que se debe enviar un True a estado signal 
+            ## Se recibe los datos de arduino en forma de tupla y se agrega a la matriz 
+            lista_datos = puerto_serial.recibir_datos_signal() 
 
-        self.y_presion = np.concatenate((self.y_presion[1:], self.y_presion[:1]))
-        self.y_presion[-1] = lista_datos[0]
-        self.y_volumen = np.concatenate((self.y_volumen[1:], self.y_volumen[:1]))
-        self.y_volumen[-1] = lista_datos[2]
-        self.y_flujo = np.concatenate((self.y_flujo[1:], self.y_flujo[:1]))
-        self.y_flujo[-1] = lista_datos[1]
+            self.y_presion = np.concatenate((self.y_presion[1:], self.y_presion[:1]))
+            self.y_presion[-1] = (lista_datos[0]*(30/255)) + variables_globales.get_dato_peep()  # escalamos la señal y sumamos el peep
+            maximo_y_presion = np.amax(self.y_presion)  ##se obtiene el valor maximo de la matriz de valores
+            variables_globales.set_valor_max_presion(maximo_y_presion)  # Mandamos los valores maximos a la variable global
+            self.y_volumen = np.concatenate((self.y_volumen[1:], self.y_volumen[:1]))   
+            self.y_volumen[-1] = lista_datos[2]
 
-        
-        self.presion_curve.setData(self.x, self.y_presion)
-        self.presion_plot.replot()
-        self.volumen_curve.setData(self.x, self.y_volumen)
-        self.volumen_plot.replot()
-        self.flujo_curve.setData(self.x, self.y_flujo)
-        self.flujo_plot.replot()
+            self.y_flujo = np.concatenate((self.y_flujo[1:], self.y_flujo[:1]))
+            self.y_flujo[-1] = lista_datos[1]
+
+            ## Se manda los datos a las variables correspondiente y se plotea al canva
+            self.presion_curve.setData(self.x, self.y_presion)
+            self.presion_plot.replot()
+            self.volumen_curve.setData(self.x, self.y_volumen)
+            self.volumen_plot.replot()
+            self.flujo_curve.setData(self.x, self.y_flujo)
+            self.flujo_plot.replot()
 
 
 if __name__ == "__main__":

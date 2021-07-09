@@ -4,13 +4,18 @@
 
 from diseño import *  # importamos el modulo de nuestro diseño en PyQt5
 import serial  # Importamos serial para la comunicacion serial con arduino
-import matplotlib.pyplot as plt  # Importamos matplotlib para mostrar las graficas
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas,NavigationToolbar2QT as NavigationToolbar
-from matplotlib.figure import Figure
 import numpy as np  # Importamos numpy para manejar matrices de nuestros datos obtenidas de arduino
 import qdarkstyle  # Para darle un estilo oscuro a nuestra interfaz graficas diseñada en PyQt5
 import puerto_serial  # PARA ENVIAR Y RECIBIR DATOS DEL PUERTO SERIE
 import signal_from_arduino  as signal_arduino
+import variables_globales
+
+
+
+if QtCore.qVersion() >= "5.":
+    from matplotlib.backends.backend_qt5agg import (
+        FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
+from matplotlib.figure import Figure
 # fin de la importacion de dependencias
 
 
@@ -24,12 +29,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.frecuencia_lcd = 15 # setea la frecuencia de inicio
         self.volumen_controlado = 0  # valor de ingreso para volumen control
         # variables globales 
-        self.contador  = 0
-        self.dato_y_flujo = np.array([])  # Matriz que guadara los datos del flujo recibidos de arduino 
-        self.dato_y_volumen = np.array([])  # Matriz que guadara los datos del volumen recibidos de arduino 
-        self.dato_x = np.array([])   # Matriz que guadara los datos del tiempo 
-        self.dato_y_presion = np.array([])   # Matriz que guadara los datos de la presion recibidos de arduino
-        self.dato_int = 0  # variable que recibe los datos de arduino
         self.posicion_com  = 0  # Posicion Index del combobox, COM del serial
         self.com_seleccionado = 0  # Puerto COM seleccionado start
         self.dato_lcd_peep = 5  # Comienza con el valor de PEEP en 5
@@ -38,8 +37,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.modo_de_control = "volumen_control"  # Guardamos el Modo de Control por default VC
         self.label_peep_actual.setText(str(self.dato_lcd_peep_confirmado))  # Setea la etiqueta con el valor de PEEP 
         self.lcdNumber_peep.display(self.dato_lcd_peep)  # Mostrara el VALOR de PEEP inicial que es 5
+        variables_globales.set_dato_peep(self.dato_lcd_peep)
         ################################
-        
+
+        #### se crean eventos para todos los botones de la interfaz Grafica ###
         self.lcdNumber_frecuencia.display(self.frecuencia_lcd)
         self.setWindowTitle("INTERFAZ GRAFICA VENTILADOR MECANICO")
         self.mensaje = QtWidgets.QMessageBox(self)
@@ -56,13 +57,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pushButton_pc.clicked.connect(self.modo_presion_control)
         self.pushButton_incrementar_volumen.clicked.connect(self.incrementar_volumen)
         self.pushButton_decrementar_volumen.clicked.connect(self.decrementar_volumen)
+        #### se crearon eventos para todos los botones de la interfaz Grafica ###
         
-        t = np.linspace(0, 800 , 800)
+        # se inicializa en Volumen Control
+        self.modo_volumen_control()
        
-        #self.verticalLayout_signal_1.addWidget(signal_arduino.all_signal(self))
+        self.verticalLayout_signal_1.addWidget(signal_arduino.all_signal(self))
+
+
+        dynamic_canvas = FigureCanvas(Figure(figsize=(5, 3)))  #para inicializar time para actualizacion de datos de la Interfaz grafica
+        self._timer = dynamic_canvas.new_timer(400)
+        self._timer.add_callback(self.eventos_gui)
+        self._timer.start()
+
+    def eventos_gui(self):
+        self.lcdNumber_presion.display(variables_globales.get_valor_max_presion())
 
      
-
     def incrementar_volumen(self):
         if self.volumen_controlado < 800:
             self.volumen_controlado += 10
@@ -91,9 +102,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def activar_sistema(self):
         if self.pase_on==1:
             puerto_serial.enviar_datos("activar_sistema")
+            variables_globales.activar_signal(True)
             self.mostrar_mensaje("Sistema Activado")
             self.sistema_activado = 1
-            self.verticalLayout_signal_1.addWidget(signal_arduino.all_signal(self))
             ### Comienza a recibir las señales y activa al timer
         if self.pase_on==0:
             self.mostrar_mensaje("Conectar el Puerto Serie")
@@ -102,6 +113,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def desactivar_sistema(self):
         if self.pase_on == 1:
             puerto_serial.enviar_datos("desactivar_sistema")
+            variables_globales.activar_signal(False)
             puerto_serial.cerrar_puerto()
             self.pase_on = 0
             self.contador  = 0
@@ -166,7 +178,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def confirmar_peep_funcion(self): 
         self.dato_lcd_peep_confirmado = self.dato_lcd_peep  
         self.label_peep_actual.setText(str(self.dato_lcd_peep_confirmado))
-
+        variables_globales.set_dato_peep(self.dato_lcd_peep)
 
     def mostrar_mensaje(self,mensaje):  # Funcion para Mostrar mensajes de alerta 
         self.mensaje.setWindowTitle("Mensaje")  # Titulo del Mensaje
@@ -177,17 +189,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 if __name__ == "__main__":
 
     app = QtWidgets.QApplication([])
-
-    #Style MatploLib
-    #plt.style.use('dark_background')  # ok
-    #plt.style.use("ggplot")
-    #plt.style.use("bmh")
-    #plt.style.use("seaborn-notebook")
-    #plt.style.use("seaborn-talk")
-    plt.style.use("seaborn-dark")  # ok
-    #plt.style.use("seaborn-colorblind")
-    #Style MatplotLib
-
     app.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt5'))
     window = MainWindow()
     window.show()
