@@ -83,6 +83,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.volumen_controlado -= 10
             self.lcdNumber_volumen_entrada.display(self.volumen_controlado)
     def modo_volumen_control(self):
+        puerto_serial.enviar_datos("modo_volumen_control")
         self.label_modo.setText("VOLUMEN CONTROL")
         self.led_vc_on.show()
         self.led_vc_off.close()
@@ -90,6 +91,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.led_pc_on.close()
 
     def modo_presion_control(self):
+        puerto_serial.enviar_datos("modo_presion_control")
         self.label_modo.setText("PRESION CONTROL")
         self.led_vc_off.show()
         self.led_vc_on.close()

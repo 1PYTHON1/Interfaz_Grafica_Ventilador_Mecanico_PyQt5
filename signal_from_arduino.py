@@ -27,7 +27,7 @@ class all_signal(QWidget):
         QWidget.__init__(self, *args)
         layout = QGridLayout(self)
     
-        self.x = np.linspace(0.0, 20.0,1000 )
+        self.x = np.linspace(0.0, 20.0,800 )
         self.y_flujo = np.zeros(len(self.x))
         self.y_presion = np.zeros(len(self.x))
         self.y_volumen = np.zeros(len(self.x))

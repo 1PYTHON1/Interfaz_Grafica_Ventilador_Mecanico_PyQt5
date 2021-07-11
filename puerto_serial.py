@@ -42,16 +42,23 @@ def recibir_datos_signal():
 
 
 def enviar_datos(dato):
-    if dato == "activar_sistema":
-        ser.write(b'2\r\n')
-    if dato == "desactivar_sistema":
-        ser.write(b'3\r\n')
-    if dato == "enviar_frecuencia":
-        ser.write(b'0\r\n')  # POR DEFINIR 
-    if dato == "incrementar_frecuencia":
-        ser.write(b'1')
-    if dato == "decrementar_frecuencia":
-        ser.write(b'0')
+    try:
+        if dato == "activar_sistema":
+            ser.write(b'2\r\n')
+        if dato == "desactivar_sistema":
+            ser.write(b'3\r\n')
+        if dato == "enviar_frecuencia":
+            ser.write(b'0\r\n')  # POR DEFINIR 
+        if dato == "incrementar_frecuencia":
+            ser.write(b'1')
+        if dato == "decrementar_frecuencia":
+            ser.write(b'0')
+        if dato == "modo_volumen_control":
+            ser.write(b'4')
+        if dato == "modo_presion_control":
+            ser.write(b'5')
+    except:
+        None
 
 def cerrar_puerto():
     ser.close()
