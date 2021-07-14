@@ -53,10 +53,14 @@ def enviar_datos(dato):
             ser.write(b'1')
         if dato == "decrementar_frecuencia":
             ser.write(b'0')
-        if dato == "modo_volumen_control":
+        if dato == "volumen_control":
             ser.write(b'4')
-        if dato == "modo_presion_control":
+        if dato == "presion_control":
             ser.write(b'5')
+        if dato == "recibir_señal":
+            ser.write(b'6')
+        if dato == "no_recibir_señal":
+            ser.write(b'7')
     except:
         None
 

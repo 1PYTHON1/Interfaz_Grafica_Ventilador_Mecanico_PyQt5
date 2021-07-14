@@ -10,8 +10,6 @@ import puerto_serial  # PARA ENVIAR Y RECIBIR DATOS DEL PUERTO SERIE
 import signal_from_arduino  as signal_arduino
 import variables_globales
 
-
-
 if QtCore.qVersion() >= "5.":
     from matplotlib.backends.backend_qt5agg import (
         FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
@@ -27,7 +25,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         #variables del ventana principal
         self.pase_on = 0  # condicionara que se debe conectar el puerto serie primero
         self.frecuencia_lcd = 15 # setea la frecuencia de inicio
-        self.volumen_controlado = 0  # valor de ingreso para volumen control
+        self.volumen_controlado = 280  # valor de ingreso para volumen control
+        self.lcdNumber_volumen.display(self.volumen_controlado)
+        self.lcdNumber_volumen_entrada.display(self.volumen_controlado)
+        variables_globales.set_valor_presion_control(self.volumen_controlado)
         # variables globales 
         self.posicion_com  = 0  # Posicion Index del combobox, COM del serial
         self.com_seleccionado = 0  # Puerto COM seleccionado start
@@ -42,6 +43,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         #### se crean eventos para todos los botones de la interfaz Grafica ###
         self.lcdNumber_frecuencia.display(self.frecuencia_lcd)
+        self.lcdNumber_flujo.display(self.frecuencia_lcd)
         self.setWindowTitle("INTERFAZ GRAFICA VENTILADOR MECANICO")
         self.mensaje = QtWidgets.QMessageBox(self)
         self.pushButton_desconectar_serial.clicked.connect(self.desconectar_puerto)
@@ -78,12 +80,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if self.volumen_controlado < 800:
             self.volumen_controlado += 10
             self.lcdNumber_volumen_entrada.display(self.volumen_controlado)
+            self.lcdNumber_volumen.display(self.volumen_controlado)
+            variables_globales.set_valor_presion_control(self.volumen_controlado)
     def decrementar_volumen(self):
         if self.volumen_controlado > 0:
             self.volumen_controlado -= 10
+            self.lcdNumber_volumen.display(self.volumen_controlado)
             self.lcdNumber_volumen_entrada.display(self.volumen_controlado)
+            variables_globales.set_valor_presion_control(self.volumen_controlado)
     def modo_volumen_control(self):
-        puerto_serial.enviar_datos("modo_volumen_control")
+        puerto_serial.enviar_datos("volumen_control")
         self.label_modo.setText("VOLUMEN CONTROL")
         self.led_vc_on.show()
         self.led_vc_off.close()
@@ -91,7 +97,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.led_pc_on.close()
 
     def modo_presion_control(self):
-        puerto_serial.enviar_datos("modo_presion_control")
+        puerto_serial.enviar_datos("presion_control")
         self.label_modo.setText("PRESION CONTROL")
         self.led_vc_off.show()
         self.led_vc_on.close()
@@ -104,6 +110,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def activar_sistema(self):
         if self.pase_on==1:
             puerto_serial.enviar_datos("activar_sistema")
+            puerto_serial.enviar_datos("recibir_señal")
             variables_globales.activar_signal(True)
             self.mostrar_mensaje("Sistema Activado")
             self.sistema_activado = 1
@@ -115,6 +122,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def desactivar_sistema(self):
         if self.pase_on == 1:
             puerto_serial.enviar_datos("desactivar_sistema")
+            puerto_serial.enviar_datos("no_recibir_señal")
             variables_globales.activar_signal(False)
             puerto_serial.cerrar_puerto()
             self.pase_on = 0
@@ -125,6 +133,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def desconectar_puerto(self):
         if self.pase_on == 1:
             puerto_serial.enviar_datos("desactivar_sistema")
+            variables_globales.activar_signal(False)
             puerto_serial.cerrar_puerto()
             self.pase_on = 0
             self.contador  = 0
@@ -157,6 +166,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.frecuencia_lcd += 1  # Incrementa la frecuencia en uno
                 puerto_serial.enviar_datos("incrementar_frecuencia")
             self.lcdNumber_frecuencia.display(self.frecuencia_lcd)  # Muesta la frecuencia actual en LCD_FRECUENCIA
+            self.lcdNumber_flujo.display(self.frecuencia_lcd)
 
     def decrementar_frecuencia(self):
         if self.pase_on == 1:
@@ -164,6 +174,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.frecuencia_lcd -= 1  # Decrementa la frecuencia en uno
                 puerto_serial.enviar_datos("decrementar_frecuencia")
             self.lcdNumber_frecuencia.display(self.frecuencia_lcd)  # Muesta la frecuencia actual en LCD_FRECUENCIA
+            self.lcdNumber_flujo.display(self.frecuencia_lcd)
 
     def incrementar_peep_funcion(self):
         if self.pase_on == 1:

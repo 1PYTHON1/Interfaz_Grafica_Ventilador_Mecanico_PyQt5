@@ -45,6 +45,15 @@ class all_signal(QWidget):
         # insert a curve and make it Blue
         self.presion_curve.attach(self.presion_plot)
         self.presion_curve.setPen(QPen(Qt.blue))
+
+        self.presion_min = QwtPlotCurve("Presion_minima")  ## solo son niveles de referencia para el auto escalado 
+        self.presion_min.attach(self.presion_plot)
+        self.presion_min.setPen(QPen(Qt.blue))
+
+        self.presion_max = QwtPlotCurve("Presion_maxima")  ## solo son niveles de referencia para el auto escalado 
+        self.presion_max.attach(self.presion_plot)
+        self.presion_max.setPen(QPen(Qt.blue))
+
         layout.addWidget(self.presion_plot, 0, 0)
         self.presion_plot.replot()
 
@@ -64,8 +73,18 @@ class all_signal(QWidget):
         self.flujo_curve.attach(self.flujo_plot)
         self.flujo_curve.setPen(QPen(Qt.green))
         self.flujo_curve.setData(x, y)
+
+        self.flujo_min = QwtPlotCurve("Flujo_min")  ## solo son niveles de referencia para el auto escalado 
+        self.flujo_min.attach(self.flujo_plot)
+        self.flujo_min.setPen(QPen(Qt.green))
+
+        self.flujo_max = QwtPlotCurve("Flujo_max")  ## solo son niveles de referencia para el auto escalado
+        self.flujo_max.attach(self.flujo_plot)
+        self.flujo_max.setPen(QPen(Qt.green))
+
         layout.addWidget(self.flujo_plot, 1, 0)
         self.flujo_plot.replot()
+        
 
         # create a plot Volumen
         self.volumen_plot = QwtPlot(self)
@@ -80,34 +99,59 @@ class all_signal(QWidget):
         self.volumen_curve.attach(self.volumen_plot)
         self.volumen_curve.setPen(QPen(Qt.red))
         self.volumen_curve.setData(x, y)
+        self.volumen_max = QwtPlotCurve("Volumen Max")  # referencia 
+        self.volumen_max.attach(self.volumen_plot)
+        self.volumen_max.setPen(QPen(Qt.red))
+
         layout.addWidget(self.volumen_plot, 2, 0)
         self.volumen_plot.replot()
+        self.startTimer(6)
 
-        
-        self.startTimer(10)
 
     def timerEvent(self,e):
+
+
         if variables_globales.estado_signal(): ### Condiciona que se debe enviar un True a estado signal 
             ## Se recibe los datos de arduino en forma de tupla y se agrega a la matriz 
+            rango_datos = 800
             lista_datos = puerto_serial.recibir_datos_signal() 
+
 
             self.y_presion = np.concatenate((self.y_presion[1:], self.y_presion[:1]))
             self.y_presion[-1] = (lista_datos[0]*(30/255)) + variables_globales.get_dato_peep()  # escalamos la señal y sumamos el peep
             maximo_y_presion = np.amax(self.y_presion)  ##se obtiene el valor maximo de la matriz de valores
+            minimo_y_flujo = np.amin(self.y_presion)
             variables_globales.set_valor_max_presion(maximo_y_presion)  # Mandamos los valores maximos a la variable global
+            matriz_presion_max = np.linspace(maximo_y_presion+10,maximo_y_presion+10, rango_datos)
+
+
             self.y_volumen = np.concatenate((self.y_volumen[1:], self.y_volumen[:1]))   
-            self.y_volumen[-1] = lista_datos[2]
+            self.y_volumen[-1] = lista_datos[2]*(variables_globales.get_valor_presion_control()/255)
 
             self.y_flujo = np.concatenate((self.y_flujo[1:], self.y_flujo[:1]))
-            self.y_flujo[-1] = lista_datos[1]
+            self.y_flujo[-1] = lista_datos[1]*(90/255)
+            minimo_y_flujo = np.amin(self.y_flujo)
+            maximo_y_flujo = np.amax(self.y_flujo)
+            matriz_flujo_min = np.linspace(minimo_y_flujo-60 ,minimo_y_flujo-60, rango_datos)
+            matriz_flujo_max = np.linspace(maximo_y_flujo+60,maximo_y_flujo+60, rango_datos)
+
 
             ## Se manda los datos a las variables correspondiente y se plotea al canva
             self.presion_curve.setData(self.x, self.y_presion)
+            self.presion_min.setData(self.x, np.linspace(0, 0 , rango_datos))
+            self.presion_max.setData(self.x, matriz_presion_max)
             self.presion_plot.replot()
+
             self.volumen_curve.setData(self.x, self.y_volumen)
+            self.volumen_max.setData(self.x , np.linspace(900, 900, rango_datos))
             self.volumen_plot.replot()
+
             self.flujo_curve.setData(self.x, self.y_flujo)
+            self.flujo_min.setData(self.x, matriz_flujo_min)
+            self.flujo_max.setData(self.x, matriz_flujo_max)
             self.flujo_plot.replot()
+
+
 
 
 if __name__ == "__main__":
