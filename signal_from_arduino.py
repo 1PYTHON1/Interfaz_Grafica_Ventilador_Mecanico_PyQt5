@@ -26,8 +26,8 @@ class all_signal(QWidget):
     def __init__(self, *args):
         QWidget.__init__(self, *args)
         layout = QGridLayout(self)
-    
-        self.x = np.linspace(0.0, 20.0,800 )
+        self.rango_init=800
+        self.x = np.linspace(0.0, 20.0,self.rango_init)
         self.y_flujo = np.zeros(len(self.x))
         self.y_presion = np.zeros(len(self.x))
         self.y_volumen = np.zeros(len(self.x))
@@ -105,45 +105,68 @@ class all_signal(QWidget):
 
         layout.addWidget(self.volumen_plot, 2, 0)
         self.volumen_plot.replot()
-        self.startTimer(6)
-
+        self.startTimer(3)
+        self.frecuencia_despues = None
+        self.counter = 1
+        self.rango_datos = 800
 
     def timerEvent(self,e):
 
 
         if variables_globales.estado_signal(): ### Condiciona que se debe enviar un True a estado signal 
             ## Se recibe los datos de arduino en forma de tupla y se agrega a la matriz 
-            rango_datos = 800
+            valor_frecuencia = variables_globales.get_valor_frecuencia()
+
+            if valor_frecuencia!=self.frecuencia_despues:
+
+                #self.x = np.linspace(0.0,20.0,valor_frecuencia*40)
+                #rango_local = self.rango_init - valor_frecuencia*40
+
+                self.x = np.linspace(0.0, 20.0,valor_frecuencia*35)
+                self.y_flujo = np.zeros(len(self.x))
+                self.y_presion = np.zeros(len(self.x))
+                self.y_volumen = np.zeros(len(self.x))
+
+                #for i in range(rango_local):
+                #    self.y_flujo = np.append(self.y_flujo,self.y_flujo[i]) 
+                #    self.y_presion = np.append(self.y_presion,self.y_presion[i])
+                #    self.y_volumen = np.append(self.y_volumen,self.y_volumen[i])
+                self.frecuencia_despues = valor_frecuencia
+                self.rango_datos = valor_frecuencia*35
+    
+    
+
             lista_datos = puerto_serial.recibir_datos_signal() 
 
 
             self.y_presion = np.concatenate((self.y_presion[1:], self.y_presion[:1]))
-            self.y_presion[-1] = (lista_datos[0]*(30/255)) + variables_globales.get_dato_peep()  # escalamos la señal y sumamos el peep
+            ### aqui colocar el factor de multiplicaion para presion control
+            self.y_presion[-1] = (lista_datos[0]*(variables_globales.get_valor_presion_control()/255)) + variables_globales.get_dato_peep() # escalamos la señal y sumamos el peep
             maximo_y_presion = np.amax(self.y_presion)  ##se obtiene el valor maximo de la matriz de valores
             minimo_y_flujo = np.amin(self.y_presion)
             variables_globales.set_valor_max_presion(maximo_y_presion)  # Mandamos los valores maximos a la variable global
-            matriz_presion_max = np.linspace(maximo_y_presion+10,maximo_y_presion+10, rango_datos)
+            matriz_presion_max = np.linspace(maximo_y_presion+10,maximo_y_presion+10, self.rango_datos)
 
 
             self.y_volumen = np.concatenate((self.y_volumen[1:], self.y_volumen[:1]))   
-            self.y_volumen[-1] = lista_datos[2]*(variables_globales.get_valor_presion_control()/255)
+            self.y_volumen[-1] = lista_datos[2]*(variables_globales.get_valor_volumen_control()/255)
 
             self.y_flujo = np.concatenate((self.y_flujo[1:], self.y_flujo[:1]))
             self.y_flujo[-1] = lista_datos[1]*(90/255)
             minimo_y_flujo = np.amin(self.y_flujo)
             maximo_y_flujo = np.amax(self.y_flujo)
-            matriz_flujo_min = np.linspace(minimo_y_flujo-60 ,minimo_y_flujo-60, rango_datos)
-            matriz_flujo_max = np.linspace(maximo_y_flujo+60,maximo_y_flujo+60, rango_datos)
+            matriz_flujo_min = np.linspace(minimo_y_flujo-60 ,minimo_y_flujo-60, self.rango_datos)
+            matriz_flujo_max = np.linspace(maximo_y_flujo+60,maximo_y_flujo+60, self.rango_datos)
 
 
             ## Se manda los datos a las variables correspondiente y se plotea al canva
             self.presion_curve.setData(self.x, self.y_presion)
-            self.presion_min.setData(self.x, np.linspace(0, 0 , rango_datos))
+            self.presion_min.setData(self.x, np.linspace(0, 0 , self.rango_datos))
             self.presion_max.setData(self.x, matriz_presion_max)
             self.presion_plot.replot()
 
             self.volumen_curve.setData(self.x, self.y_volumen)
-            self.volumen_max.setData(self.x , np.linspace(900, 900, rango_datos))
+            self.volumen_max.setData(self.x , np.linspace(900, 900, self.rango_datos))
             self.volumen_plot.replot()
 
             self.flujo_curve.setData(self.x, self.y_flujo)

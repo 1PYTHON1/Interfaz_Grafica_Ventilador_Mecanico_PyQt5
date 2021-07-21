@@ -33,6 +33,18 @@ def set_valor_max_presion(valor):  # Para setear cual es el valor maximo de la g
 	valor_max_presion = valor
 
 
+def get_valor_volumen_control():
+	try:
+		return valor_volumen_control
+
+	except:
+		return 0
+
+def set_valor_volumen_control(valor):
+	global valor_volumen_control
+	valor_volumen_control = valor
+
+
 def get_valor_presion_control():
 	try:
 		return valor_presion_control
@@ -45,6 +57,16 @@ def set_valor_presion_control(valor):
 	valor_presion_control = valor
 
 
+def get_valor_frecuencia():
+	try:
+		return valor_frecuencia
+
+	except:
+		return 0
+
+def set_valor_frecuencia(valor):
+	global valor_frecuencia
+	valor_frecuencia = valor 
 
 
 

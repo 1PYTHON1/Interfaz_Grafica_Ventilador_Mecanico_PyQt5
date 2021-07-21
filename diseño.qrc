@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="design">
+    <file>emojione-v1_warning.png</file>
     <file>iconos/mdi_led-on.png</file>
     <file>iconos/Vector.png</file>
     <file>iconos/akar-icons_circle-chevron-down-fill (1).png</file>
